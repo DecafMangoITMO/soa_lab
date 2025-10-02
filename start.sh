@@ -1,0 +1,1 @@
+java -Djavax.net.ssl.keyStore=./tls/keystore.p12  -Djavax.net.ssl.trustStore=./tls/cacerts.p12 -jar payara-micro-6.2025.9.jar --nocluster --domainconfig custom_domain.xml --deploy soa/service1/target/service-1-0.0.1-SNAPSHOT.war --deploy soa/service2/target/service-2-0.0.1-SNAPSHOT.war

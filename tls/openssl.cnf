@@ -1,0 +1,28 @@
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+C = XX
+ST = StateName
+L = CityName
+O = CompanyName
+OU = CompanySectionName
+CN = CommonNameOrHostname
+
+[v3_req]
+keyUsage = keyEncipherment, digitalSignature
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+basicConstraints = CA:FALSE
+
+[alt_names]
+DNS.1 = macbookpro
+DNS.2 = localhost
+IP.1 = 127.0.0.1
+
+# Для CA (добавьте эту секцию)
+[v3_ca]
+basicConstraints = critical,CA:TRUE
+keyUsage = keyCertSign, cRLSign

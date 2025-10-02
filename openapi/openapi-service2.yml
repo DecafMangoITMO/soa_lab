@@ -1,0 +1,99 @@
+openapi: 3.0.0
+info:
+  title: Сервис 2
+  version: 1.0.0
+  description: Сервис, осуществляющий ряд дополнительных операций, связанных с вызовом API первого сервиса
+servers:
+  - url: http://service2.com/api/v1/orgmanager
+    description: Заглушка сервиса 2
+tags:
+  - name: organization
+    description: 'Операции с организациями'
+paths:
+  /merge/{id1}/{id2}/new-name/new-address:
+    post:
+      description: 'Объединение организации, создав новую и зачислив в неё всех сотрудников двух исходных'
+      operationId: mergeOrganizations
+      tags:
+        - organization
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId1'
+        - $ref: '#/components/parameters/OrganizationId2'
+      responses:
+        200:
+          description: Успешное объединение организаций
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Organization'
+        400:
+          description: Неверный формат данных
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/BadRequest'
+        404:
+          description: Одна из организаций не найдена (или не найдены обе)
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/NotFound'
+        500:
+          description: Внутренняя ошибка сервера
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Error'
+  /hire/{id}:
+    put:
+      description: 'Добавление нового сотрудника в организацию с указанным идентификатором'
+      operationId: hireEmployee
+      tags:
+        - organization
+      parameters:
+        - $ref: '/common.yml#/components/parameters/OrganizationId'
+      responses:
+        200:
+          description: Успешное добавление сотрудника
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Organization'
+        400:
+          description: Неверный формат данных
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/BadRequest'
+        404:
+          description: Организация не найдена
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/NotFound'
+        500:
+          description: Внутренняя ошибка сервера
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Error'
+components:
+  parameters:
+    OrganizationId1:
+      description: 'Идентификатор первой организации (используется для операции merge)'
+      name: id1
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        example: 123
+    OrganizationId2:
+      description: 'Идентификатор второй организации (используется для операции merge)'
+      name: id2
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        example: 123

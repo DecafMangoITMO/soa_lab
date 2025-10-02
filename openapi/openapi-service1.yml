@@ -1,0 +1,309 @@
+openapi: 3.0.0
+info:
+  title: Сервис 1
+  version: 1.0.0
+  description: Сервис, осуществляющий управление коллекцией объектов типа Organization
+servers:
+  - url: http://service1.com/api/v1
+    description: Заглушка сервиса 1
+tags:
+  - name: organization
+    description: 'Операции с организациями'
+paths:
+  /organizations:
+    get:
+      description: 'Получение всех организаций'
+      operationId: getAllOrganizations
+      tags:
+        - organization
+      parameters:
+        - $ref: '#/components/parameters/Sorting'
+        - $ref: '#/components/parameters/Filtering'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageIndex'
+        - $ref: '#/components/parameters/FullNamePart'
+      responses:
+        200:
+          description: 'Успешное получение всех организаций'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Organizations'
+        400:
+          description: 'Неверный формат данных'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/BadRequest'
+        500:
+          description: 'Внутренняя ошибка сервера'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Error'
+    post:
+      description: 'Создание организации'
+      operationId: createOrganization
+      tags:
+        - organization
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: './common.yml#/components/schemas/FullOrganizationRequest'
+      responses:
+        201:
+          description: 'Успешное создание организации'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/FullOrganizationRequest'
+        400:
+          description: 'Неверный формат данных'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/BadRequest'
+        500:
+          description: 'Внутренняя ошибка сервера'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Error'
+  /organizations/average/employee-count:
+    get:
+      description: 'Получение среднего количества сотрудников по всем организациям'
+      operationId: getAverageEmployeeCount
+      tags:
+        - organization
+      responses:
+        200:
+          description: 'Успешное получение среднего количества сотрудников'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/AverageEmployeeCount'
+        500:
+          description: 'Внутренняя ошибка сервера'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Error'
+  /organizations/count:
+    get:
+      description: 'Получение количества организаций по указанному годовому обороту'
+      operationId: getAnnualTurnover
+      tags:
+        - organization
+      parameters:
+        - $ref: '#/components/parameters/AnnualTurnover'
+      responses:
+        200:
+          description: 'Успешное получение количества организаций по указанному годовому обороту'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/OrganizationsCount'
+        500:
+          description: 'Внутренняя ошибка сервера'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Error'
+  /organizations/{id}:
+    get:
+      description: 'Получение организации по идентификатору'
+      operationId: getOrganizationById
+      tags:
+        - organization
+      parameters:
+        - $ref: './common.yml#/components/parameters/OrganizationId'
+      responses:
+        200:
+          description: 'Успешное получение организации'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Organization'
+        404:
+          description: 'Организация не найдена'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/NotFound'
+        500:
+          description: 'Внутренняя ошибка сервера'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Error'
+    put:
+      description: 'Полное обновление организации по идентификатору'
+      operationId: updateOrganizationFullyById
+      tags:
+        - organization
+      parameters:
+        - $ref: './common.yml#/components/parameters/OrganizationId'
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: './common.yml#/components/schemas/FullOrganizationRequest'
+      responses:
+        200:
+          description: 'Успешное полное обновление организации'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Organization'
+        400:
+          description: 'Неверный формат данных'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/BadRequest'
+        404:
+          description: 'Организация не найдена'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/NotFound'
+        500:
+          description: 'Внутренняя ошибка сервера'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Error'
+    patch:
+      description: 'Частичное обновление организации по идентификатору'
+      operationId: updateOrganizationPartiallyById
+      tags:
+        - organization
+      parameters:
+        - $ref: './common.yml#/components/parameters/OrganizationId'
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: './common.yml#/components/schemas/PartialOrganizationRequest'
+      responses:
+        200:
+          description: 'Успешное частичное обновление организации'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Organization'
+        400:
+          description: 'Неверный формат данных'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/BadRequest'
+        404:
+          description: 'Организация не найдена'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/NotFound'
+        500:
+          description: 'Внутренняя ошибка сервера'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Error'
+    delete:
+      description: 'Удаление организации по идентификатору'
+      operationId: deleteOrganizationById
+      tags:
+        - organization
+      parameters:
+        - $ref: './common.yml#/components/parameters/OrganizationId'
+      responses:
+        200:
+          description: 'Успешное удаление организации'
+        404:
+          description: 'Организация не найдена'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/NotFound'
+        500:
+          description: 'Внутренняя ошибка сервера'
+          content:
+            application/xml:
+              schema:
+                $ref: './common.yml#/components/schemas/Error'
+components:
+  parameters:
+    Sorting:
+      description: >
+        Порядок сортировки. Формат: `<поле1>.<порядок1>,<поле2>.<порядок2>,...`.
+        Порядок указывается знаками asc (по возрастанию) и desc (по убыванию).
+      name: sorting
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+          pattern: '^[a-zA-Z]+\.(asc|desc)$'
+      style: form
+      explode: false
+      required: false
+      example: 'nameA.asc,nameB.desc'
+    Filtering:
+      description: >
+        Фильтрация по полям. Формат: `<название поля>.<оператор>.<значение>`  
+        Поддерживаемые операторы:  
+        - `gt` — больше (>)
+        - `gte` — больше или равно (>=)
+        - `eq` — равно (=)
+        - `ne` — не равно (!=)
+        - `lte` — меньше или равно (<=)
+        - `lt` — меньше (<)  
+        Пример: `annualTurnover.gte.100000`, `name.eq.ABC`
+      name: filtering
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+          pattern: '^[a-zA-Z][a-zA-Z0-9_]*\.(gt|gte|eq|ne|lte|lt)\..+'
+      style: form
+      explode: false
+      example: 'nameA.eq.valueA,nameB.gt.valueB'
+    PageSize:
+      description: 'Размер страницы'
+      name: page-size
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+      required: false
+    PageIndex:
+      description: 'Индекс страницы'
+      name: page-index
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+      required: false
+    AnnualTurnover:
+      description: 'Годовой оборот'
+      name: annual-turnover
+      in: query
+      required: true
+      schema:
+        type: number
+        format: double
+        example: 123.4567
+    FullNamePart:
+      description: 'Частичное название организации'
+      name: full-name-part
+      in: query
+      required: false
+      schema:
+        type: string
+        example: 'Частичное название организации'
+  
+

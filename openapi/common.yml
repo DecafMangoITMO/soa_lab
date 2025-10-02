@@ -1,0 +1,223 @@
+openapi: 3.0.0
+info:
+  title: Common-модуль
+  version: 1.0.0
+  description: Модуль, содержащий общие компоненты для всех сервисов
+components:
+  parameters:
+    OrganizationId:
+      description: 'Идентификатор организации'
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        example: 123
+  schemas:
+    FullOrganizationRequest:
+      type: object
+      properties:
+        name:
+          description: 'Поле не может быть null, Строка не может быть пустой'
+          type: string
+          minLength: 1
+          example: 'Название организации'
+        coordinates:
+          description: 'Поле не может быть null'
+          allOf:
+            - $ref: '#/components/schemas/Coordinates'
+        annualTurnover:
+          description: 'Поле не может быть null, Значение поля должно быть больше 0'
+          type: number
+          format: double
+          minimum: 0
+          exclusiveMinimum: true
+          example: 123.4567
+        fullName:
+          description: 'Поле может быть null'
+          type: string
+          example: 'Полное название организации'
+        employeeCount:
+          description: 'Поле можеть быть null, Значение поля должно быть больше 0'
+          type: integer
+          format: int64
+          minimum: 0
+          exclusiveMinimum: true
+          example: 123
+        type:
+          description: 'Поле не может быть null'
+          allOf:
+            - $ref: '#/components/schemas/OrganizationType'
+        postalAddress:
+          description: 'Поле не может быть null'
+          allOf:
+            - $ref: '#/components/schemas/Address'
+      required:
+        - name
+        - coordinates
+        - annualTurnover
+        - fullName
+        - type
+        - postalAddress
+    PartialOrganizationRequest:
+      type: object
+      properties:
+        name:
+          description: 'Поле не может быть null, Строка не может быть пустой'
+          type: string
+          minLength: 1
+          example: 'Название организации'
+        coordinates:
+          description: 'Поле не может быть null'
+          allOf:
+            - $ref: '#/components/schemas/Coordinates'
+        annualTurnover:
+          description: 'Поле не может быть null, Значение поля должно быть больше 0'
+          type: number
+          format: double
+          minimum: 0
+          exclusiveMinimum: true
+          example: 123.4567
+        fullName:
+          description: 'Поле может быть null'
+          type: string
+          example: 'Полное название организации'
+        employeeCount:
+          description: 'Поле можеть быть null, Значение поля должно быть больше 0'
+          type: integer
+          format: int64
+          minimum: 0
+          exclusiveMinimum: true
+          example: 123
+        type:
+          description: 'Поле не может быть null'
+          allOf:
+            - $ref: '#/components/schemas/OrganizationType'
+        postalAddress:
+          description: 'Поле не может быть null'
+          allOf:
+            - $ref: '#/components/schemas/Address'
+    Organization:
+      allOf:
+        - $ref: '#/components/schemas/FullOrganizationRequest'
+        - type: object
+          properties:
+            id:
+              description: 'Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически'
+              type: integer
+              minimum: 0
+              example: 123
+            creationDate:
+              description: 'Поле не может быть null, Значение этого поля должно генерироваться автоматически'
+              type: string
+              format: date
+              example: '2023-01-01'
+      required:
+        - creationDate
+    Organizations:
+      type: array
+      items:
+        $ref: '#/components/schemas/Organization'
+      xml:
+        name: Organizations
+        wrapped: true
+    Coordinates:
+      type: object
+      properties:
+        x:
+          description: 'Максимальное значение поля: 258, Поле не может быть null'
+          type: number
+          format: double
+          maximum: 258
+          example: 123.45
+        y:
+          description: 'Значение поля должно быть больше -149, Поле не может быть null'
+          type: integer
+          format: int64
+          minimum: -149
+          exclusiveMinimum: true
+          example: 123
+      required:
+        - x
+        - y
+    Address:
+      type: object
+      properties:
+        street:
+          description: 'Строка не может быть пустой, Поле может быть null'
+          type: string
+          minLength: 1
+          example: 'Название улицы'
+        town:
+          description: 'Поле не может быть null'
+          allOf:
+            - $ref: '#/components/schemas/Location'
+      required:
+        - town
+    Location:
+      type: object
+      properties:
+        x:
+          description: 'Поле не может быть null'
+          type: number
+          format: double
+          example: 123.4567
+        y:
+          description: 'Поле не может быть null'
+          type: number
+          format: float
+          example: 123.45
+        name:
+          description: 'Поле не может быть null'
+          type: string
+          example: 'Название локации'
+      required:
+        - x
+        - y
+        - name
+    OrganizationType:
+      type: string
+      enum:
+        - COMMERCIAL
+        - PUBLIC
+        - GOVERNMENT
+        - TRUST
+        - OPEN_JOINT_STOCK_COMPANY
+    AverageEmployeeCount:
+      type: object
+      properties:
+        avg:
+          type: number
+          format: double
+          example: 123.4567
+    OrganizationsCount:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+    BadRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Сообщение об некорректных данных'
+      required:
+        - message
+    NotFound:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Сообщение об не найденных данных'
+      required:
+        - message
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Сообщение об ошибке'
+      required:
+        - message
