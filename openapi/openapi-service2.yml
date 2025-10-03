@@ -45,7 +45,7 @@ paths:
               schema:
                 $ref: './common.yml#/components/schemas/Error'
   /hire/{id}:
-    put:
+    post:
       description: 'Добавление нового сотрудника в организацию с указанным идентификатором'
       operationId: hireEmployee
       tags:

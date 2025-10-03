@@ -1416,7 +1416,10 @@
     async function hireEmployee(id) {
         try {
             const response = await fetch(`${API_CONFIG.SERVICE2_BASE_URL}/hire/${id}`, {
-                method: 'PUT'
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/xml'
+                }
             });
 
             if (!response.ok) {

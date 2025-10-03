@@ -7,12 +7,21 @@ import jakarta.ws.rs.ext.Provider;
 
 @Provider
 public class CORSResponseFilter implements ContainerResponseFilter {
-    
+
     @Override
     public void filter(ContainerRequestContext requestContext,
                        ContainerResponseContext responseContext) {
+
+        // Явно указываем разрешенные origins
         responseContext.getHeaders().add("Access-Control-Allow-Origin", "*");
-        responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        responseContext.getHeaders().add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+        // Явно перечисляем методы вместо *
+        responseContext.getHeaders().add("Access-Control-Allow-Methods", "*");
+
+        responseContext.getHeaders().add("Access-Control-Allow-Headers", "*");
+
+        // Кэшируем preflight на 1 час
+        responseContext.getHeaders().add("Access-Control-Max-Age", "3600");
+
     }
 }
